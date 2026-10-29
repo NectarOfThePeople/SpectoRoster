@@ -1,0 +1,34 @@
+# Android movie watchlist
+Kotlin, Jetpack Compose, Material 3, single module, minSdk 26.
+
+## Stack (nothing else without asking)
+Room (KSP), Retrofit + kotlinx.serialization, Coil, Navigation Compose, Jetpack DataStore, coroutines/Flow, ViewModel.
+No Hilt. Wire dependencies manually with one AppContainer created in the Application class.
+In-app browser = WebView via AndroidView.
+
+## Build rules
+Do not add or upgrade dependencies, or change Gradle/AGP/Kotlin/KSP versions, without asking. Use the version catalog (libs.versions.toml).
+Use current, non-deprecated Compose APIs.
+Use the Gradle wrapper for this OS: gradlew.bat on Windows, ./gradlew otherwise.
+Finish all edits for a feature, then run assembleDebug and fix errors. Before calling a feature done, also run lintDebug and testDebugUnitTest.
+If the same build error persists after 2 attempts, stop and show me the full error instead of retrying.
+
+## Data
+Source: TMDB v3 (https://api.themoviedb.org/3). Send the key as the api_key query parameter.
+The key is entered by the user at runtime and stored in DataStore. Never hardcode a key. Never create a BuildConfig key.
+Poster URL: https://image.tmdb.org/t/p/w342 + poster_path.
+Room table "movies": tmdbId (primary key), imdbId, title, year, shortDescription, posterUrl, addedAt.
+shortDescription = tagline if not blank, else overview.
+The list reads only from Room, ordered by addedAt DESC (newest at top, oldest at bottom).
+Ignore duplicate adds.
+
+## UI rules
+Tiles: full width, rounded corners (16.dp), 12.dp padding, height from content. The "+" tile is shorter, same shape, only a + icon.
+The About screen shows: This product uses the TMDB API but is not endorsed or certified by TMDB.
+Never use Modifier.blur or RenderEffect. Any blur must be done in app code (software) and work on all API levels.
+Configure Coil with allowHardware(false) so images can be captured to a bitmap.
+
+## Safety
+Never read or edit keystores, *.jks, google-services.json, or local.properties.
+Do not run git commands other than git status and git diff.
+Keep NOTES.md updated with decisions and current status.
